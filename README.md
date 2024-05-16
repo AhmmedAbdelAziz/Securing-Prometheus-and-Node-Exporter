@@ -53,3 +53,17 @@ This README file describes how to secure the communication between Prometheus an
    ```bash 
    systemctl daemon-reload
    systemctl restart node_exporter
+   ```
+
+## Configure Prometheus for TLS
+
+8. Copy the Node Exporter crt file to Prometheus' configuration directory.
+
+9. Update the Prometheus configuration file prometheus.yml:
+
+   ```yaml
+   scheme: https 
+   tls_config:
+     ca_file: node_exporter.crt
+     insecure_skip_verify: true
+   ```
