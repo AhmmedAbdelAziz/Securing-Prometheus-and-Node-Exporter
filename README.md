@@ -26,13 +26,19 @@ This README file describes how to secure the communication between Prometheus an
 
 ## Configure Node Exporter for TLS
 
-4. Create a config.yml file:
+4. Change ownership and group owner of private key.
+
+    ```bash
+   chown node_exporter:node_exporter node_exporter.key  
+    ```
+
+5. Create a config.yml file:
 
    ```bash
-   nano config.yml
+   vi config.yml
    ```
 
-5. Add the certificate and key file paths to config.yml:
+6. Add the certificate and key file paths to config.yml:
 
    ```yaml
    tls_server_config:
@@ -40,15 +46,15 @@ This README file describes how to secure the communication between Prometheus an
      key_file: node_exporter.key
    ```
 
-6. Edit the Node Exporter systemd service unit file: 
+7. Edit the Node Exporter systemd service unit file: 
 
    ```bash
-   nano /etc/systemd/system/node_exporter.service
+   vi /etc/systemd/system/node_exporter.service
    ```
 
    Add the config file path parameter.
 
-7. Reload daemon and restart Node Exporter:
+8. Reload daemon and restart Node Exporter:
 
    ```bash 
    systemctl daemon-reload
@@ -57,9 +63,14 @@ This README file describes how to secure the communication between Prometheus an
 
 ## Configure Prometheus for TLS
 
-8. Copy the Node Exporter crt file to Prometheus' configuration directory.
+9. Copy the Node Exporter crt file to Prometheus' configuration directory (etc)
 
-9. Update the Prometheus configuration file prometheus.yml:
+10. Change ownership and group owner of the certificate:
+    ```bash 
+    chown prometheus:prometheus node_exporter.crt
+    ```
+    
+12. Update the Prometheus configuration file prometheus.yml:
 
    ```yaml
    scheme: https 
@@ -67,3 +78,8 @@ This README file describes how to secure the communication between Prometheus an
      ca_file: node_exporter.crt
      insecure_skip_verify: true
    ```
+12. Restart prometheus:
+    
+    ```
+    systemctl restart prometheus
+    ```
